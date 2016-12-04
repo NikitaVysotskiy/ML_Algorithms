@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.linalg import inv
 from Gradient_descent import gradient_descent
+from Regularization import regularized_gradient_descent, regularized_norm_eq
 
 
 def main():
@@ -16,6 +17,13 @@ def main():
     print(predict(5.5, theta1))
     print(predict(500, theta))
     print(predict(500, theta1))
+    print("After regularization")
+    theta_reg1 = req_train(x, y, 0.005, 5.)
+    theta_reg2 = regularized_norm_eq(x, y, 5)
+    print(predict(5.5, theta_reg1))
+    print(predict(5.5, theta_reg2))
+    print(predict(500, theta_reg1))
+    print(predict(500, theta_reg2))
 
 
 def normal_equation(x, y):
@@ -29,6 +37,12 @@ def normal_equation(x, y):
 def train(x, y, learn_rate):
     theta = [1, 1]
     theta = gradient_descent(theta, learn_rate, len(y), x, y)
+    return theta
+
+
+def req_train(x, y, learn_rate, reg_coef):
+    theta = [1., 1.]
+    theta = regularized_gradient_descent(theta, learn_rate, len(y), x, y, reg_coef)
     return theta
 
 

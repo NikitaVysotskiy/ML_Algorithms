@@ -1,6 +1,7 @@
 from random import randrange
 import numpy as np
 from Gradient_descent import gradient_descent
+from Regularization import regularized_gradient_descent
 
 
 def main():
@@ -10,18 +11,30 @@ def main():
          [randrange(0, 6) for i in range(m)] + [randrange(6, 10) for i in range(m)]]
     x = np.transpose(x)
     y = [0] * m + [1] * m
-    learn_rate = 0.005
-    theta1 = train(x, y, learn_rate)
+    theta1 = train(x, y, 0.005)
     xt1 = [1, 3]
     xt2 = [7, 8]
     print(theta1)
     print(predict(xt1, theta1))
     print(predict(xt2, theta1))
+    print("After regularization")
+    theta2 = reg_train(x, y, 0.005, 5)
+    xt1 = [1, 3]
+    xt2 = [7, 8]
+    print(theta2)
+    print(predict(xt1, theta2))
+    print(predict(xt2, theta2))
 
 
 def train(x, y, learn_rate):
     theta = [1, 1, 1]
     theta = gradient_descent(theta, learn_rate, len(y), x, y, "log")
+    return theta
+
+
+def reg_train(x, y, learn_rate, reg_coef):
+    theta = [1, 1, 1]
+    theta = regularized_gradient_descent(theta, learn_rate, len(y), x, y, reg_coef, "log")
     return theta
 
 
