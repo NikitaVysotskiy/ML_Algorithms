@@ -1,6 +1,7 @@
 import numpy as np
 from math import e
 from numpy.linalg import inv
+from Gradient_descent import linear_hypothesis, log_hypothesis
 
 
 def regularized_gradient_descent(theta, rate, m, x, y, reg_coef, alg="lin"):
@@ -16,14 +17,6 @@ def regularized_gradient_descent(theta, rate, m, x, y, reg_coef, alg="lin"):
         theta = np.array(theta).astype(float)
         theta = theta * (1 - (rate * float(reg_coef)) / float(m)) - rate * gradient
     return theta
-
-
-def linear_hypothesis(x, theta):
-    return np.dot(x, theta)
-
-
-def log_hypothesis(x, theta):
-    return 1 / (1 + e ** (- np.dot(x, theta)))
 
 
 def regularized_norm_eq(x, y, reg_coef):

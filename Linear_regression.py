@@ -11,19 +11,30 @@ def main():
     x = np.transpose(x)
     y = list(range(m))
 
-    theta = train(x, y, 0.005)
-    theta1 = normal_equation(x, y)
-    print(predict(5.5, theta))
-    print(predict(5.5, theta1))
-    print(predict(500, theta))
-    print(predict(500, theta1))
+    theta1 = train(x, y, 0.005)
+    print("Predictions with gradient descent (expected y = x):")
+    print("x = 5.5, y: ", predict(5.5, theta1))
+    print("x = 13.2, y: ", predict(13.2, theta1))
+    print("x = 138, y: ", predict(138, theta1))
+
+    theta2 = normal_equation(x, y)
+    print("Predictions with normal equation (expected y = x):")
+    print("x = 5.5, y: ", predict(5.5, theta2))
+    print("x = 13.2, y: ", predict(13.2, theta2))
+    print("x = 138, y: ", predict(138, theta2))
+
     print("After regularization")
-    theta_reg1 = req_train(x, y, 0.005, 5.)
+    theta_reg1 = req_train(x, y, 0.005, 5)
+    print("Predictions with regularized gradient descent (expected y = x):")
+    print("x = 5.5, y: ", predict(5.5, theta_reg1))
+    print("x = 13.2, y: ", predict(13.2, theta_reg1))
+    print("x = 138, y: ", predict(138, theta_reg1))
+
     theta_reg2 = regularized_norm_eq(x, y, 5)
-    print(predict(5.5, theta_reg1))
-    print(predict(5.5, theta_reg2))
-    print(predict(500, theta_reg1))
-    print(predict(500, theta_reg2))
+    print("Predictions with regularized normal equation (expected y = x):")
+    print("x = 5.5, y: ", predict(5.5, theta_reg2))
+    print("x = 13.2, y: ", predict(13.2, theta_reg2))
+    print("x = 138, y: ", predict(138, theta_reg2))
 
 
 def normal_equation(x, y):
@@ -41,7 +52,7 @@ def train(x, y, learn_rate):
 
 
 def req_train(x, y, learn_rate, reg_coef):
-    theta = [1., 1.]
+    theta = [1, 1]
     theta = regularized_gradient_descent(theta, learn_rate, len(y), x, y, reg_coef)
     return theta
 
@@ -51,4 +62,3 @@ def predict(x, theta):
 
 if __name__ == '__main__':
     main()
-

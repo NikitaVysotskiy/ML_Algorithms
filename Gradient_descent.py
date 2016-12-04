@@ -2,7 +2,7 @@ import numpy as np
 from math import e
 
 
-def gradient_descent(theta, rate, m, x, y, alg="lin"):
+def gradient_descent(theta, rate, m, x, y, alg=""):
     num_of_iterations = 10000
     x_t = np.transpose(x)
     for i in range(num_of_iterations):
