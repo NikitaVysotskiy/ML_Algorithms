@@ -5,7 +5,7 @@ from Regularization import regularized_gradient_descent
 
 
 def main():
-    m = 100
+    m = 50
     x = [[1] * (2 * m),
          [randrange(0, 6) for i in range(m)] + [randrange(6, 10) for i in range(m)],
          [randrange(0, 6) for i in range(m)] + [randrange(6, 10) for i in range(m)]]
