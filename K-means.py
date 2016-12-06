@@ -1,68 +1,50 @@
 from random import randrange
-from math import sqrt
 import numpy as np
+
 
 def main():
     m = 10
-    x = [[randrange(0, 10) for i in range(m)] + [randrange(20, 30) for i in range(m)],
-        [randrange(0, 10) for i in range(m)] + [randrange(20, 30) for i in range(m)]]
+    x = [[randrange(0, 10) for i in range(m)] + [randrange(11, 21) for i in range(m)],
+         [randrange(0, 10) for i in range(m)] + [randrange(11, 21) for i in range(m)],
+         [randrange(0, 2) for i in range(m * 2)]]
+    print("X before clustering:\n", np.transpose(x))
+    num_of_clusters = 2
+    x = clusterise(x, num_of_clusters)
 
-    print(x)
-
-    clusterise(x)
-
-def clusterise(x):
-    # k = 2
-
-    k = [[x[0][randrange(len(x[0]))], x[1][randrange(len(x[1]))]],
-         [x[0][randrange(len(x[0]))], x[1][randrange(len(x[1]))]]]
-    print(k)
-
-    cluster0 = []
-    cluster1 = []
+    print("X, splitted on {0} clusters (3rd num of each point refers to num of cluster):\n".format(num_of_clusters), x)
 
 
-    for i in range(len(x[0])):
-        dist_to_0 = sqrt((x[0][i] - k[0][0]) ** 2 + (x[1][i] - k[0][1]) ** 2)
-        dist_to_1 = sqrt((x[0][i] - k[1][0]) ** 2 + (x[1][i] - k[1][1]) ** 2)
-        if dist_to_0 > dist_to_1:
-            cluster0.append([x[0][i], x[1][i]])
-        else:
-            cluster1.append([x[0][i], x[1][i]])
+def count_distance(x, k):
+    return np.sqrt(np.sum((np.array(k) - x) ** 2, axis=1))
 
-    cluster0 = np.transpose(cluster0)
-    cluster1 = np.transpose(cluster1)
-    k[0][0] = np.average(cluster0[0])
-    k[0][1] = np.average(cluster0[1])
-    k[1][0] = np.average(cluster1[0])
-    k[1][1] = np.average(cluster1[1])
 
-    for n in range(1000):
-        for i in range(len(cluster0[0])):
-            dist_to_0 = sqrt((cluster0[0][i] - k[0][0]) ** 2 + (cluster0[1][i] - k[0][1]) ** 2)
-            dist_to_1 = sqrt((cluster0[0][i] - k[1][0]) ** 2 + (cluster0[1][i] - k[1][1]) ** 2)
-            if dist_to_0 > dist_to_1:
-                list(cluster0).append([cluster0[0][i], cluster0[1][i]])
-            else:
-                list(cluster1).append([cluster0[0][i], cluster0[1][i]])
+def clusterise(x, num_of_clusters):
+    m = len(x[0])
+    x = np.transpose(x)
+    k = []
 
-        for i in range(len(cluster0[0])):
-            dist_to_0 = sqrt((cluster1[0][i] - k[0][0]) ** 2 + (cluster1[1][i] - k[0][1]) ** 2)
-            dist_to_1 = sqrt((cluster1[0][i] - k[1][0]) ** 2 + (cluster1[1][i] - k[1][1]) ** 2)
-            if dist_to_0 > dist_to_1:
-                list(cluster0).append([cluster1[0][i], cluster1[1][i]])
-            else:
-                list(cluster1).append([cluster1[0][i], cluster1[1][i]])
+    for i in range(num_of_clusters):
+        k.append(x[randrange(m)][:-1])
 
-        k[0][0] = np.average(cluster0[0])
-        k[0][1] = np.average(cluster0[1])
-        k[1][0] = np.average(cluster1[0])
-        k[1][1] = np.average(cluster1[1])
+    for n in range(100):
+        for point in x:
+            distances = count_distance(point[:-1], k)
+            min_dist = np.argmin(distances)
+            point[2] = min_dist
 
-    print(cluster0)
-    print(cluster1)
+        clusters = []
 
-    print(k)
+        for i in range(len(k)):
+            clusters.append([])
+
+        for point in x:
+            clusters[point[2]].append(point[:-1])
+
+        for i in range(len(k)):
+            for j in range(len(k[i])):
+                k[i][j] = np.average(np.transpose(clusters[i])[j]) if len(clusters[i]) != 0 else 0
+
+    return x
 
 if __name__ == '__main__':
     main()
